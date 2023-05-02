@@ -1,0 +1,11 @@
+{
+  "name": "extract-transcript",
+  "version": "1.0.0",
+  "description": "Extract a transcript from Google Recorder json file with periodic timestamps.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Brian D. Wong <bdwong.net@gmail.com>",
+  "license": "MIT"
+}
