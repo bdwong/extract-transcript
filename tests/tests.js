@@ -18,6 +18,11 @@ describe('extractor', () => {
     assert.equal(extract(sample), "\nHello world. This is a test.");
   });
 
+  it('outputs the transcript of sample2', () => {
+    const sample = JSON.parse(fs.readFileSync(path.join(__dirname, 'sample2.json')));
+    assert.equal(extract(sample), "\nThis is the first sentence. This is the second sentence.");
+  });
+
   it.todo('outputs transcript with initial timestamp', () => {
     assert.equal(true, true);
   });
