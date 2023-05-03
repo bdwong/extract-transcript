@@ -1,6 +1,6 @@
 const config = require('./lib/config');
 const { program } = require('commander');
-const { extractWithTimestamps } = require('./lib/extractor');
+const { extractWithTimestamps, extractWithBlockInterval } = require('./lib/extractor');
 const fs = require('node:fs');
 const path = require('node:path');
 
@@ -11,5 +11,10 @@ const options = program.opts();
 
 program.args.forEach(filepath => {
   const transcript = JSON.parse(fs.readFileSync(filepath));
-  console.log(extractWithTimestamps(transcript));
+
+  if (options.interval) {
+    console.log(extractWithBlockInterval(transcript, options.interval));
+  } else {
+    console.log(extractWithTimestamps(transcript));
+  }
 });
