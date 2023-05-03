@@ -1,26 +1,28 @@
 const { mock, test, describe, beforeEach, it } = require('test');
 const assert = require('node:assert/strict');
+const path = require('node:path');
 
 // TODO: load test config.
-const { extract } = require('lib/extractor');
+const { extract } = require('../lib/extractor');
 const fs = require('fs');
+const thisdir = path.join(__dirname, "testconfig.json")
 
 describe('extractor', () => {
-  xit('reads a JSON file', () => {
-    const sample = JSON.readFileSync('sample1.json');
-    assert.equal({["Hello", "World"]}, sample);
+  it('reads a JSON file', () => {
+    const sample = JSON.parse(fs.readFileSync(path.join(__dirname, 'sample1.json')));
+    assert.equal(Array.isArray(sample), true);
   });
 
-  xit('outputs the text of the file', () => {
+  it('outputs the transcript of sample1', () => {
+    const sample = JSON.parse(fs.readFileSync(path.join(__dirname, 'sample1.json')));
+    assert.equal(extract(sample), "\nHello world. This is a test.");
+  });
+
+  it.todo('outputs transcript with initial timestamp', () => {
     assert.equal(true, true);
   });
 
-  xit('outputs transcript with initial timestamp', () => {
-    assert.equal(true, true);
-  });
-
-  xit('outputs transcript with periodic timestamp', () => {
+  it.todo('outputs transcript with periodic timestamp', () => {
     assert.equal(true, true);
   });
 })
-
