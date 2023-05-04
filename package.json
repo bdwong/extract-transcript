@@ -2,9 +2,11 @@
   "name": "extract-transcript",
   "version": "1.0.0",
   "description": "Extract a transcript from Google Recorder json file with periodic timestamps.",
-  "main": "index.js",
+  "main": "extract-transcript.js",
+  "bin": "extract-transcript.js",
   "scripts": {
-    "test": "node tests/tests.js"
+    "test": "node tests/tests.js",
+    "build": "pkg -t node18 ."
   },
   "keywords": [
     "Google Recorder",
@@ -15,6 +17,9 @@
   "license": "MIT",
   "devDependencies": {
     "test": "^3.3.0"
+  },
+  "pkg": {
+    "outputPath": "build"
   },
   "dependencies": {
     "appyconfig": "^1.3.0",
