@@ -5,7 +5,7 @@
   "main": "extract-transcript.js",
   "bin": "extract-transcript.js",
   "scripts": {
-    "test": "node tests/tests.js",
+    "test": "node test/tests.js",
     "build": "pkg -t node18 ."
   },
   "keywords": [
