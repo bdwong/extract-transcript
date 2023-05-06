@@ -1,4 +1,7 @@
-Format of json file:
+# File formats
+
+## Google Recorder
+Expected Format of JSON input file:
 
 ```json
 [ // Tuple with one element (Array)
@@ -24,3 +27,26 @@ Format of json file:
   ]
 ]
 ```
+
+## SRT
+
+From Wikipedia: [SubRip file format (SRT)](https://en.wikipedia.org/wiki/SubRip)
+
+```
+1
+00:02:16,612 --> 00:02:19,376
+Senator, we're making
+our final approach into Coruscant.
+
+```
+
+Repeat for each subtitle:
+
+- 1-based counter
+- HH:MM:SS,tt --> HH:MM:SS,mm
+- One or more lines with subtitle text
+- [a blank line ends the subtitle.]
+
+## WebVTT
+
+From Wikipedia: [Web Video Text Tracks (WebVTT)](https://en.wikipedia.org/wiki/WebVTT)
