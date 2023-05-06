@@ -7,8 +7,10 @@ const {
   extract,
   extractWithTimestamps,
   extractWithBlockInterval,
+  quantizeBlocks,
   formatAsTranscript,
   formatAsSRT,
+  WORD_TEXT,
 } = require('../lib/extractor');
 const fs = require('fs');
 const thisdir = path.join(__dirname, "testconfig.json")
@@ -87,3 +89,22 @@ describe('formatAsSRT', () => {
   });
 });
 
+describe('quantizeBlocks', () => {
+  it('combines blocks within the same interval' , () => {
+    const sample = JSON.parse(fs.readFileSync(path.join(__dirname, 'sample2.json')));
+    const blocks = quantizeBlocks(sample[0], 10000);
+    assert.equal(blocks.length, 1);
+    assert.equal(blocks[0][0].length, 10);
+  });
+
+  it ('does not combine blocks that are not in the same interval', () => {
+    const sample = JSON.parse(fs.readFileSync(path.join(__dirname, 'sample2.json')));
+    const blocks = quantizeBlocks(sample[0], 5000);
+    assert.equal(blocks.length, 2);
+    assert.equal(blocks[0][0].length, 5);
+    assert.equal(blocks[0][0][3][WORD_TEXT], 'first');
+    assert.equal(blocks[1][0].length, 5);
+    assert.equal(blocks[1][0][3][WORD_TEXT], 'second');
+  });
+
+});
