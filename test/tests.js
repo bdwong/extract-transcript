@@ -3,7 +3,13 @@ const assert = require('node:assert/strict');
 const path = require('node:path');
 
 // TODO: load test config.
-const { extract, extractWithTimestamps, extractWithBlockInterval } = require('../lib/extractor');
+const {
+  extract,
+  extractWithTimestamps,
+  extractWithBlockInterval,
+  formatAsTranscript,
+  formatAsSRT,
+} = require('../lib/extractor');
 const fs = require('fs');
 const thisdir = path.join(__dirname, "testconfig.json")
 
@@ -50,3 +56,34 @@ describe('extractWithBlockInterval', () => {
     assert.equal(extractWithBlockInterval(sample, 7), "0:00\tStart of recording. Five second mark.\n0:10\tTen second mark.\n0:15\tFifteen second mark. Twenty second mark.");
   });
 });
+
+describe('formatAsTranscript', () => {
+
+  it('outputs the transcript of sample1', () => {
+    const sample = JSON.parse(fs.readFileSync(path.join(__dirname, 'sample1.json')));
+    assert.equal(formatAsTranscript(sample[0]), "0:00\tHello world. This is a test.");
+  });
+
+  it('outputs the transcript of sample2', () => {
+    const sample = JSON.parse(fs.readFileSync(path.join(__dirname, 'sample2.json')));
+    assert.equal(formatAsTranscript(sample[0]), "0:00\tThis is the first sentence.\n0:05\tThis is the second sentence.");
+  });
+});
+
+describe('formatAsSRT', () => {
+
+  it('outputs the srt of sample1', () => {
+    const sample = JSON.parse(fs.readFileSync(path.join(__dirname, 'sample1.json')));
+    assert.equal(formatAsSRT(sample[0]), "1\n00:00:00,480 --> 00:00:02,700\nHello world. This is a test.\n");
+  });
+
+  it('outputs the srt of sample2', () => {
+    const sample = JSON.parse(fs.readFileSync(path.join(__dirname, 'sample2.json')));
+    assert.equal(
+      formatAsSRT(sample[0]),
+      "1\n00:00:00,540 --> 00:00:02,340\nThis is the first sentence.\n\n" +
+      "2\n00:00:05,340 --> 00:00:06,900\nThis is the second sentence.\n"
+    );
+  });
+});
+
