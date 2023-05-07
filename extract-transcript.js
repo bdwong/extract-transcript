@@ -5,11 +5,13 @@ const {
   formatAsTranscript,
   formatAsSRT,
   quantizeBlocks,
+  softBreakBlocks,
  } = require('./lib/extractor');
 const fs = require('node:fs');
 const path = require('node:path');
 
 program.option('-i, --interval <seconds>', 'print timestamp after specific interval (in seconds)');
+program.option('-s, --softbreak <numchars>', 'break block on first trailing punctuation after numchars characters');
 program.addOption(new Option('-f, --format <type>', 'output format')
   .choices(['txt', 'transcript', 'srt'])
   .default('transcript')
@@ -38,6 +40,9 @@ program.args.forEach(filepath => {
 
   if (options.interval) {
     blocks = quantizeBlocks(blocks, options.interval*1000);
+  }
+  if (options.softbreak) {
+    blocks = softBreakBlocks(blocks, options.softbreak);
   }
   console.log(formatter(blocks));
 });
