@@ -8,6 +8,7 @@ const {
   extractWithTimestamps,
   extractWithBlockInterval,
   quantizeBlocks,
+  softBreakBlocks,
   formatAsTranscript,
   formatAsSRT,
   WORD_TEXT,
@@ -106,5 +107,20 @@ describe('quantizeBlocks', () => {
     assert.equal(blocks[1][0].length, 5);
     assert.equal(blocks[1][0][3][WORD_TEXT], 'second');
   });
-
 });
+
+describe('softBreakBlocks', () => {
+  it('breaks blocks on punctuation if character limit is exceeded', () => {
+    const sample = JSON.parse(fs.readFileSync(path.join(__dirname, 'sample1.json')));
+    const blocks = softBreakBlocks(sample[0], 5);
+    assert.equal(blocks.length, 2);
+    assert.equal(blocks[0][0].length, 2);
+    assert.equal(blocks[1][0].length, 4);
+  });
+});
+
+// describe('hardBreakBlocks', () => {
+//   it('breaks block at current word if character limit is exceeded', () => {
+
+//   });
+// });
