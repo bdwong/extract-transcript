@@ -9,6 +9,7 @@ const {
   extractWithBlockInterval,
   quantizeBlocks,
   softBreakBlocks,
+  hardBreakBlocks,
   formatAsTranscript,
   formatAsSRT,
   WORD_TEXT,
@@ -119,8 +120,14 @@ describe('softBreakBlocks', () => {
   });
 });
 
-// describe('hardBreakBlocks', () => {
-//   it('breaks block at current word if character limit is exceeded', () => {
-
-//   });
-// });
+describe('hardBreakBlocks', () => {
+  it('breaks block at current word if character limit is exceeded', () => {
+    const sample = JSON.parse(fs.readFileSync(path.join(__dirname, 'sample1.json')));
+    const blocks = hardBreakBlocks(sample[0], 6);
+    assert.equal(blocks.length, 4);
+    assert.equal(blocks[0][0].length, 1);
+    assert.equal(blocks[1][0].length, 1);
+    assert.equal(blocks[2][0].length, 2);
+    assert.equal(blocks[3][0].length, 2);
+  });
+});
