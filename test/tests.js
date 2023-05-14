@@ -16,6 +16,7 @@ const {
 } = require('../lib/extractor');
 const {
   flattenRecording,
+  fattenRecording,
 } = require('../lib/flatRecording');
 const fs = require('fs');
 const thisdir = path.join(__dirname, "testconfig.json")
@@ -171,5 +172,46 @@ describe('flattenRecording', () => {
       ["second",null,"6180","6300",null,null,[0,1]],
       ["sentence","sentence.","6300","6900",null,null,[0,1]],
     ]);
+  })
+});
+
+describe('fattenRecording', () => {
+  it('converts flat array to recording structure', () => {
+    const sample = JSON.parse(fs.readFileSync(path.join(__dirname, 'sample1.json')));
+    const flat = [
+      { level: 0, type: "top", version: "1.0" },
+      { level: 1, type: "blockArray" },
+      { level: 2, type: "block", isNewLocale: 0, locale: "en-US" },
+      ["hello","\nHello","480","1020",null,null,[0,0]],
+      ["world","world.","1020","1380",null,null,[0,0]],
+      ["this","This","1380","1920",null,null,[0,0]],
+      ["is",null,"1920","2040",null,null,[0,0]],
+      ["a",null,"2040","2520",null,null,[0,0]],
+      ["test","test.","2520","2700",null,null,[0,0]]
+    ];
+    const result = fattenRecording(flat);
+    assert.deepEqual(result, sample);
+  })
+
+  it('handles flat arrays with multiple blocks', () => {
+    const sample = JSON.parse(fs.readFileSync(path.join(__dirname, 'sample2.json')));
+    const flat = [
+      { level: 0, type: "top", version: "1.0" },
+      { level: 1, type: "blockArray" },
+      { level: 2, type: "block", isNewLocale: 0, locale: "en-US" },
+      ["this","\nThis","540","1320",null,null,[0,0]],
+      ["is",null,"1320","1500",null,null,[0,0]],
+      ["the",null,"1500","1620",null,null,[0,0]],
+      ["first",null,"1620","1920",null,null,[0,0]],
+      ["sentence","sentence.","1920","2340",null,null,[0,0]],
+      { level: 2, type: "block", isNewLocale: 0, locale: "en-US" },
+      ["this","This","5340","5640",null,null,[1,1]],
+      ["is",null,"5640","5700",null,null,[0,1]],
+      ["the",null,"5700","6180",null,null,[0,1]],
+      ["second",null,"6180","6300",null,null,[0,1]],
+      ["sentence","sentence.","6300","6900",null,null,[0,1]],
+    ];
+    const result = fattenRecording(flat);
+    assert.deepEqual(result, sample);
   })
 });
