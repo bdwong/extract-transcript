@@ -112,6 +112,13 @@ describe('quantizeBlocks', () => {
     assert.equal(blocks[1][0].length, 5);
     assert.equal(blocks[1][0][3][WORD_TEXT], 'second');
   });
+
+  it ('ignores empty blocks', () => {
+    const sample = JSON.parse(fs.readFileSync(path.join(__dirname, 'sample4.json')));
+    const blocks = quantizeBlocks(sample[0], 10000);
+    assert.equal(blocks.length, 1);
+    assert.equal(blocks[0][0].length, 2);
+  });
 });
 
 describe('softBreakBlocks', () => {
