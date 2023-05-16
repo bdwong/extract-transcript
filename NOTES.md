@@ -9,8 +9,8 @@ Expected Format of JSON input file:
     [ // Speech block
       [ // Word collection
         [ // a word
-          "transcribed-word", // lowercase word
-          "decorated-word", // with punctuation and capitalization. null if original word has no punctuation/capitalization.
+          "transcribed-word", // lowercase word, both leading and trailing spaces and punctuation are trimmed.
+          "decorated-word", // with punctuation, spaces and capitalization. null if original word would be the same.
           "start_ms", // start of word in ms
           "end_ms", // end of word in ms
           null,
