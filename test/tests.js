@@ -18,6 +18,7 @@ const {
   flattenRecording,
   fattenRecording,
   splitHyphenGenerator,
+  joinHyphenGenerator,
 } = require('../lib/flatRecording');
 const fs = require('fs');
 const thisdir = path.join(__dirname, "testconfig.json")
@@ -241,9 +242,39 @@ describe('splitHyphenGenerator', () => {
       { level: 1, type: "blockArray" },
       { level: 2, type: "block", isNewLocale: 0, locale: "en-US" },
       ["the","The","420","786",null,null,[0,0]],
-      // Note: "one-word" matched twice, so the word duration includes both matches.
+      // Note: "one-word" matches twice, so the word duration includes both matches.
       ["one-word","one-word--","787","1522",null,null,[0,0]],
       ["wonder",null,"1523","1890",null,null,[0,0]]
+    ]);
+  })
+});
+
+describe('joinHyphenGenerator', () => {
+  it('joins words on trailing hyphens', () => {
+    const sample = JSON.parse(fs.readFileSync(path.join(__dirname, 'sample6.json')));
+    const stream = flattenRecording(sample);
+    assert.deepEqual(stream, [
+      { level: 0, type: "top", version: "1.0" },
+      { level: 1, type: "blockArray" },
+      { level: 2, type: "block", isNewLocale: 0, locale: "en-US" },
+      ["force","Force-","100","199",null,null,[0,0]],
+      ["hyphen","-hyphen---","200","299",null,null,[0,0]],
+      ["ated",null,"300","399",null,null,[0,0]],
+      ["a","A-","400","499",null,null,[0,0]],
+      ["2","2-","500","599",null,null,[0,0]],
+      ["3","3-","600","699",null,null,[0,0]],
+      ["ea","ea-","700","799",null,null,[0,0]],
+      ["sy","sy?","800","899",null,null,[0,0]]
+    ]);
+    const joinIterator = joinHyphenGenerator(stream);
+    const output = Array.from(joinIterator);
+    assert.deepEqual(output, [
+      { level: 0, type: "top", version: "1.0" },
+      { level: 1, type: "blockArray" },
+      { level: 2, type: "block", isNewLocale: 0, locale: "en-US" },
+      // Note: "one-word" matches twice, so the word duration includes both matches.
+      ["force-hyphen-ated","Force-hyphen-ated","100","399",null,null,[0,0]],
+      ["a23easy","A23easy?","400","899",null,null,[0,0]]
     ]);
   })
 });
