@@ -17,6 +17,7 @@ const {
 const {
   flattenRecording,
   fattenRecording,
+  splitHyphenGenerator,
 } = require('../lib/flatRecording');
 const fs = require('fs');
 const thisdir = path.join(__dirname, "testconfig.json")
@@ -220,5 +221,29 @@ describe('fattenRecording', () => {
     ];
     const result = fattenRecording(flat);
     assert.deepEqual(result, sample);
+  })
+});
+
+describe('splitHyphenGenerator', () => {
+  it('splits internal hyphens', () => {
+    const sample = JSON.parse(fs.readFileSync(path.join(__dirname, 'sample5.json')));
+    const stream = flattenRecording(sample);
+    assert.deepEqual(stream, [
+      { level: 0, type: "top", version: "1.0" },
+      { level: 1, type: "blockArray" },
+      { level: 2, type: "block", isNewLocale: 0, locale: "en-US" },
+      ["the-one--word---wonder","The-one--word---wonder","420","1890",null,null,[0,0]]
+    ]);
+    const splitIterator = splitHyphenGenerator(stream);
+    const output = Array.from(splitIterator);
+    assert.deepEqual(output, [
+      { level: 0, type: "top", version: "1.0" },
+      { level: 1, type: "blockArray" },
+      { level: 2, type: "block", isNewLocale: 0, locale: "en-US" },
+      ["the","The","420","786",null,null,[0,0]],
+      // Note: "one-word" matched twice, so the word duration includes both matches.
+      ["one-word","one-word--","787","1522",null,null,[0,0]],
+      ["wonder",null,"1523","1890",null,null,[0,0]]
+    ]);
   })
 });
