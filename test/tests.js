@@ -182,6 +182,16 @@ describe('flattenRecording', () => {
       ["sentence","sentence.","6300","6900",null,null,[0,1]],
     ]);
   })
+
+  it('handles a recording with an empty block', () => {
+    const sample = JSON.parse('[[[]]]');
+    const stream = flattenRecording(sample);
+    assert.deepEqual(stream, [
+      { level: 0, type: "top", version: "1.0" },
+      { level: 1, type: "blockArray" },
+      { level: 2, type: "block", isNewLocale: undefined, locale: undefined },
+    ]);
+  })
 });
 
 describe('fattenRecording', () => {
@@ -223,6 +233,18 @@ describe('fattenRecording', () => {
     const result = fattenRecording(flat);
     assert.deepEqual(result, sample);
   })
+
+  it('handles a flat array with an empty block', () => {
+    const sample = JSON.parse('[[[]]]');
+    const flat = [
+      { level: 0, type: "top", version: "1.0" },
+      { level: 1, type: "blockArray" },
+      { level: 2, type: "block", isNewLocale: undefined, locale: undefined },
+    ]
+    const result = fattenRecording(flat);
+    assert.deepEqual(result, sample);
+  })
+
 });
 
 describe('splitHyphenGenerator', () => {
