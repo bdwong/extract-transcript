@@ -241,9 +241,9 @@ describe('splitHyphenGenerator', () => {
       { level: 0, type: "top", version: "1.0" },
       { level: 1, type: "blockArray" },
       { level: 2, type: "block", isNewLocale: 0, locale: "en-US" },
-      ["the","The","420","786",null,null,[0,0]],
+      ["the-one","The-one","420","1154",null,null,[0,0]],
       // Note: "one-word" matches twice, so the word duration includes both matches.
-      ["one-word","one-word--","787","1522",null,null,[0,0]],
+      ["word","word--","1155","1522",null,null,[0,0]],
       ["wonder","wonder--","1523","1890",null,null,[0,0]]
     ]);
   })
