@@ -12,6 +12,7 @@ const {
   hardBreakBlocks,
   formatAsTranscript,
   formatAsSRT,
+  formatAsWebVTT,
   WORD_TEXT,
 } = require('../lib/extractor');
 const {
@@ -95,6 +96,45 @@ describe('formatAsSRT', () => {
       "2\n00:00:05,340 --> 00:00:06,900\nThis is the second sentence.\n"
     );
   });
+});
+
+describe('formatAsWebVTT', () => {
+
+  it('outputs the WebVTT of sample1', () => {
+    const sample = JSON.parse(fs.readFileSync(path.join(__dirname, 'sample1.json')));
+    assert.equal(formatAsWebVTT(sample[0]), [
+      "WEBVTT",
+      "",
+      "STYLE",
+      "::cue {",
+      "  background-color: rgba(80,80,80,0.2)",
+      "  color: #ffffff;",
+      "}",
+      "",
+      "00:00:00.480 --> 00:00:02.700",
+      "- Hello world. This is a test.",
+    ].join('\n'));
+  });
+
+  it('outputs the WebVTT of sample2', () => {
+    const sample = JSON.parse(fs.readFileSync(path.join(__dirname, 'sample2.json')));
+    assert.equal(formatAsWebVTT(sample[0]), [
+      "WEBVTT",
+      "",
+      "STYLE",
+      "::cue {",
+      "  background-color: rgba(80,80,80,0.2)",
+      "  color: #ffffff;",
+      "}",
+      "",
+      "00:00:00.540 --> 00:00:02.340",
+      "- This is the first sentence.",
+      "",
+      "00:00:05.340 --> 00:00:06.900",
+      "- This is the second sentence.",
+    ].join('\n'));
+  });
+
 });
 
 describe('quantizeBlocks', () => {
