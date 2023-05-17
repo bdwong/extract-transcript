@@ -260,9 +260,9 @@ describe('joinHyphenGenerator', () => {
       ["force","Force-","100","199",null,null,[0,0]],
       ["hyphen","-hyphen---","200","299",null,null,[0,0]],
       ["ated",null,"300","399",null,null,[0,0]],
-      ["a","A-","400","499",null,null,[0,0]],
+      ["a","\nA-","400","499",null,null,[0,0]],
       ["2","2-","500","599",null,null,[0,0]],
-      ["3","3-","600","699",null,null,[0,0]],
+      ["3","3--","600","699",null,null,[0,0]],
       ["ea","ea-","700","799",null,null,[0,0]],
       ["sy","sy?","800","899",null,null,[0,0]]
     ]);
@@ -274,7 +274,9 @@ describe('joinHyphenGenerator', () => {
       { level: 2, type: "block", isNewLocale: 0, locale: "en-US" },
       // Note: "one-word" matches twice, so the word duration includes both matches.
       ["force-hyphen-ated","Force-hyphen-ated","100","399",null,null,[0,0]],
-      ["a23easy","A23easy?","400","899",null,null,[0,0]]
+      // Note: leading newline is trimmed from output.
+      ["a23","A23--","400","699",null,null,[0,0]],
+      ["easy","easy?","700","899",null,null,[0,0]]
     ]);
   })
 });
