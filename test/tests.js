@@ -20,6 +20,9 @@ const {
   fattenRecording,
   splitHyphenGenerator,
   joinHyphenGenerator,
+  escapeRegEx,
+  escapeReplacementString,
+  replaceGenerator,
 } = require('../lib/flatRecording');
 const fs = require('fs');
 const thisdir = path.join(__dirname, "testconfig.json")
@@ -342,3 +345,54 @@ describe('joinHyphenGenerator', () => {
     ]);
   })
 });
+
+describe('escapeRegEx', () => {
+  it('escapes all regular expression special characters', () => {
+    assert.equal(
+      escapeRegEx(String.raw`a+*?.()[]{}\^$|`),
+      String.raw`a\+\*\?\.\(\)\[\]\{\}\\\^\$\|`
+    );
+  });
+});
+
+describe('escapeReplacementString', () => {
+  it('escapes string replace special characters', () => {
+    assert.equal(
+      escapeReplacementString('a$b$'),
+      'a$$b$$'
+    );
+  });
+});
+
+describe('replaceGenerator', () => {
+  it('substitutes searched text with replacement text', () => {
+    const stream = [
+      { level: 0, type: "top", version: "1.0" },
+      { level: 1, type: "blockArray" },
+      { level: 2, type: "block", isNewLocale: 0, locale: "en-US" },
+      ["I",null,"100","199",null,null,[0,0]],
+      ["write","write,","200","299",null,null,[0,0]],
+      ["i",null,"400","499",null,null,[0,0]],
+      ["note","note:","500","599",null,null,[0,0]],
+      ["*not*",null,"700","799",null,null,[0,0]],
+      ["i","i.","800","899",null,null,[0,0]]
+    ];
+    const replaceIterator = replaceGenerator(
+      stream,
+      ['i', 'I'],
+      ['not', 'yet']
+    );
+    const output = Array.from(replaceIterator);
+    assert.deepEqual(output, [
+      { level: 0, type: "top", version: "1.0" },
+      { level: 1, type: "blockArray" },
+      { level: 2, type: "block", isNewLocale: 0, locale: "en-US" },
+      ["i","I","100","199",null,null,[0,0]],
+      ["write","write,","200","299",null,null,[0,0]],
+      ["i","I","400","499",null,null,[0,0]],
+      ["note","note:","500","599",null,null,[0,0]],
+      ["yet","*yet*","700","799",null,null,[0,0]],
+      ["i","I.","800","899",null,null,[0,0]]
+    ]);
+  })
+})
