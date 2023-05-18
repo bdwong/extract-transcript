@@ -4,6 +4,7 @@ const {
   formatAsText,
   formatAsTranscript,
   formatAsSRT,
+  formatAsWebVTT,
   quantizeBlocks,
   softBreakBlocks,
  } = require('./lib/extractor');
@@ -21,7 +22,7 @@ program.option('-s, --softbreak <numchars>', 'break block on first trailing punc
 program.option('-j, --join-hyphens', 'join words with trailing hyphens');
 program.option('-b, --break-hyphens', 'break apart words with inline hyphens');
 program.addOption(new Option('-f, --format <type>', 'output format')
-  .choices(['txt', 'transcript', 'srt'])
+  .choices(['txt', 'transcript', 'srt', 'vtt'])
   .default('transcript')
 );
 program.parse();
@@ -39,7 +40,10 @@ switch(options.format) {
   case 'srt':
     formatter = formatAsSRT;
     break;
-}
+  case 'vtt':
+    formatter = formatAsWebVTT;
+    break;
+  }
 
 program.args.forEach(filepath => {
   let transcript = JSON.parse(fs.readFileSync(filepath));
