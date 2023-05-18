@@ -112,7 +112,7 @@ describe('formatAsWebVTT', () => {
       "}",
       "",
       "00:00:00.480 --> 00:00:02.700",
-      "- Hello world. This is a test.",
+      "Hello world. This is a test.",
     ].join('\n'));
   });
 
@@ -128,10 +128,10 @@ describe('formatAsWebVTT', () => {
       "}",
       "",
       "00:00:00.540 --> 00:00:02.340",
-      "- This is the first sentence.",
+      "This is the first sentence.",
       "",
       "00:00:05.340 --> 00:00:06.900",
-      "- This is the second sentence.",
+      "This is the second sentence.",
     ].join('\n'));
   });
 
