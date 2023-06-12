@@ -23,6 +23,7 @@ const {
   escapeRegEx,
   escapeReplacementString,
   replaceGenerator,
+  timeshiftStream,
 } = require('../lib/flatRecording');
 const fs = require('fs');
 const thisdir = path.join(__dirname, "testconfig.json")
@@ -396,3 +397,42 @@ describe('replaceGenerator', () => {
     ]);
   })
 })
+
+describe('timeshiftStream', () => {
+  it('shifts timing of words by positive amount ', () => {
+    const sample = JSON.parse(fs.readFileSync(path.join(__dirname, 'sample1.json')));
+    let stream = flattenRecording(sample);
+    stream = timeshiftStream(stream, 1200);
+
+    assert.deepEqual(stream, [
+      { level: 0, type: "top", version: "1.0" },
+      { level: 1, type: "blockArray" },
+      { level: 2, type: "block", isNewLocale: 0, locale: "en-US" },
+      ["hello","\nHello","1680","2220",null,null,[0,0]],
+      ["world","world.","2220","2580",null,null,[0,0]],
+      ["this","This","2580","3120",null,null,[0,0]],
+      ["is",null,"3120","3240",null,null,[0,0]],
+      ["a",null,"3240","3720",null,null,[0,0]],
+      ["test","test.","3720","3900",null,null,[0,0]]
+    ]);
+  });
+
+  it('shifts timing of words by negative amount ', () => {
+    const sample = JSON.parse(fs.readFileSync(path.join(__dirname, 'sample1.json')));
+    let stream = flattenRecording(sample);
+    stream = timeshiftStream(stream, -500);
+
+    assert.deepEqual(stream, [
+      { level: 0, type: "top", version: "1.0" },
+      { level: 1, type: "blockArray" },
+      { level: 2, type: "block", isNewLocale: 0, locale: "en-US" },
+      ["hello","\nHello","-20","520",null,null,[0,0]],
+      ["world","world.","520","880",null,null,[0,0]],
+      ["this","This","880","1420",null,null,[0,0]],
+      ["is",null,"1420","1540",null,null,[0,0]],
+      ["a",null,"1540","2020",null,null,[0,0]],
+      ["test","test.","2020","2200",null,null,[0,0]]
+    ]);
+  });
+
+});
