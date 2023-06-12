@@ -16,6 +16,7 @@ const {
   splitHyphenGenerator,
   joinHyphenGenerator,
   replaceGenerator,
+  timeshiftStream,
 } = require('./lib/flatRecording');
 
 program.option('-i, --interval <seconds>', 'print timestamp after specific interval (in seconds)');
@@ -23,6 +24,7 @@ program.option('-s, --softbreak <numchars>', 'break block on first trailing punc
 program.option('-j, --join-hyphens', 'join words with trailing hyphens');
 program.option('-b, --break-hyphens', 'break apart words with inline hyphens');
 program.option('-r, --replace-words <jsonFile>', 'search and replace using words from JSON file')
+program.option('-t, --timeshift <milliseconds>', 'shift captions by specified interval (in milliseconds)')
 program.addOption(new Option('-f, --format <type>', 'output format')
   .choices(['txt', 'transcript', 'srt', 'vtt'])
   .default('transcript')
@@ -59,6 +61,9 @@ program.args.forEach(filepath => {
   if (options.replaceWords) {
     const jsonReplace = JSON.parse(fs.readFileSync(options.replaceWords));
     recording = Array.from(replaceGenerator(recording, ...jsonReplace));
+  }
+  if (options.timeshift) {
+    recording = timeshiftStream(recording, parseInt(options.timeshift));
   }
   transcript = fattenRecording(recording);
 
